@@ -93,7 +93,7 @@ export default function Login() {
         </div>
         <div className="text-center mt-1">
           Need an account?
-          <Link to="/signup" className="underline cursor-pointer">
+          <Link to="/signup" disabled className="underline cursor-pointer">
             &nbsp;Sign Up
           </Link>
         </div>
