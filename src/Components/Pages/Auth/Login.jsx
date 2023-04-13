@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { signInWithPopup } from "firebase/auth";
+import { provider, auth } from './Firebase';
+
 import "./auth.css";
 import { setAccessToken, setisLoggedIn, getisLoggedIn, } from "../../Storage/Storage";
 import { PATH_NAME } from "../../Configs/PathName";
@@ -37,8 +40,8 @@ export default function Login() {
       return;
     }
     if (!Object.keys(formError).length) {
-      //handleLogin();
-      setAccessToken(formData);
+      // handleLogin();
+      //setAccessToken(formData);
       setisLoggedIn(true);
       navigate(PATH_NAME.HOME, { replace: true });
     }
@@ -46,24 +49,29 @@ export default function Login() {
 
 
   const handleLogin = async () => {
-    try {
-      const response = await fetch("http://localhost:8000/login", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
+    const auth = getAuth();
+    sendSignInLinkToEmail(auth, formData.email, actionCodeSettings)
+      .then(() => {
+        window.localStorage.setItem('emailForSignIn', email);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        const errorMessage = error.message;
       });
-      const json = await response.json();
-      if (json.loginData.isLogin) {
-        alert(json.message);
-        setFormData({});
-        setFormError({});
+  };
+
+
+
+
+  const handleGoogleLogin = () => {
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        setisLoggedIn(true);
         navigate(PATH_NAME.HOME, { replace: true });
-      } else {
-        alert(json.message);
-      }
-    } catch (error) {
-      console.log(error);
-    }
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   };
 
   return (
@@ -83,7 +91,7 @@ export default function Login() {
         <Button disabled={!formData.email || !formData.password} onClick={handleSubmit}>Login</Button>
         <div className="line-in-text my-3 text-center">or login with</div>
         <div className="flex align-items-center justify-content-center ">
-          <Button variant="buttonWithImg" >
+          <Button variant="buttonWithImg" onClick={handleGoogleLogin} type="button">
             <img src={googleIcon} alt="Google" height={"25px"} />
             &nbsp;Google
           </Button>
