@@ -5,7 +5,7 @@ import { signInWithPopup } from "firebase/auth";
 import { provider, auth } from './Firebase';
 
 import "./auth.css";
-import { setAccessToken, setisLoggedIn, getisLoggedIn, } from "../../Storage/Storage";
+import { setisLoggedIn, getisLoggedIn, } from "../../Storage/Storage";
 import { PATH_NAME } from "../../Configs/PathName";
 import LoginImg from "../../../Assets/Images/Tools.svg";
 import googleIcon from "../../../Assets/Icons/google.svg";
@@ -23,8 +23,7 @@ export default function Login() {
 
   useEffect(() => {
     if (getisLoggedIn()) {
-
-      navigate(PATH_NAME.LOGIN, { replace: true });
+     navigate(PATH_NAME.HELLOWORLD, { replace: true });
     }
   }, [getisLoggedIn()]);
 
@@ -41,33 +40,29 @@ export default function Login() {
     }
     if (!Object.keys(formError).length) {
       // handleLogin();
-      //setAccessToken(formData);
       setisLoggedIn(true);
-      navigate(PATH_NAME.HOME, { replace: true });
+      navigate(PATH_NAME.HELLOWORLD, { replace: true });
     }
   }
 
 
-  const handleLogin = async () => {
-    const auth = getAuth();
-    sendSignInLinkToEmail(auth, formData.email, actionCodeSettings)
-      .then(() => {
-        window.localStorage.setItem('emailForSignIn', email);
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-      });
-  };
-
-
-
+  // const handleLogin = async () => {
+  //   const auth = getAuth();
+  //   sendSignInLinkToEmail(auth, formData.email, actionCodeSettings)
+  //     .then(() => {
+  //       window.localStorage.setItem('emailForSignIn', email);
+  //     })
+  //     .catch((error) => {
+  //       const errorCode = error.code;
+  //       const errorMessage = error.message;
+  //     });
+  //};
 
   const handleGoogleLogin = () => {
     signInWithPopup(auth, provider)
       .then((result) => {
         setisLoggedIn(true);
-        navigate(PATH_NAME.HOME, { replace: true });
+        navigate(PATH_NAME.HELLOWORLD, { replace: true });
       })
       .catch((error) => {
         console.log(error);
@@ -88,7 +83,7 @@ export default function Login() {
           {formError.passwordError && (<p className="text-red">{formError.passwordError}</p>)}
         </div>
 
-        <Button disabled={!formData.email || !formData.password} onClick={handleSubmit}>Login</Button>
+        <Button disabled={!formData.email || !formData.password} onClick={handleSubmit} type="submit">Login</Button>
         <div className="line-in-text my-3 text-center">or login with</div>
         <div className="flex align-items-center justify-content-center ">
           <Button variant="buttonWithImg" onClick={handleGoogleLogin} type="button">
