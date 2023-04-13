@@ -91,12 +91,6 @@ export default function Login() {
             &nbsp;Google
           </Button>
         </div>
-        <div className="text-center mt-1">
-          Need an account?
-          <Link to="/signup" disabled className="underline cursor-pointer">
-            &nbsp;Sign Up
-          </Link>
-        </div>
       </form>
     </div>
   );
